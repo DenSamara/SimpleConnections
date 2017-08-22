@@ -1,5 +1,3 @@
-package com.dalimo.mtrade.connectivity;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,13 +11,11 @@ import java.util.Locale;
 import android.util.Base64;
 import android.util.Log;
 
-import com.dalimo.mtrade.Const;
-
 public class SMTP {
 	private final static short bufSize = 1024;
 
 	private final static String TAG = "!->SMTP";
-	private final static String BOUND = "-------------------MTrade";
+	private final static String BOUND = "-------------------Boundary";
 	// private final static String CHARSET_NAME = "UTF-8";
 
 	private final static short CONNECT_SUCCESS = 220;
@@ -108,12 +104,12 @@ public class SMTP {
 
 	private static boolean connect() throws IOException {
 		if (mServer.length() == 0) {
-			mLastError = "Имя сервера не может быть пустым";
+			mLastError = "Г€Г¬Гї Г±ГҐГ°ГўГҐГ°Г  Г­ГҐ Г¬Г®Г¦ГҐГІ ГЎГ»ГІГј ГЇГіГ±ГІГ»Г¬";
 			return false;
 		}
 
 		if (mLogin.length() == 0) {
-			mLastError = "Имя пользователя не может быть пустым";
+			mLastError = "Г€Г¬Гї ГЇГ®Г«ГјГ§Г®ГўГ ГІГҐГ«Гї Г­ГҐ Г¬Г®Г¦ГҐГІ ГЎГ»ГІГј ГЇГіГ±ГІГ»Г¬";
 			return false;
 		}
 
@@ -179,7 +175,7 @@ public class SMTP {
 			return false;
 		}
 
-		// Начинаем авторизовываться
+		// ГЌГ Г·ГЁГ­Г ГҐГ¬ Г ГўГІГ®Г°ГЁГ§Г®ГўГ»ГўГ ГІГјГ±Гї
 		send("AUTH LOGIN\r\n");
 		message = receive();
 
@@ -189,29 +185,29 @@ public class SMTP {
 			return false;
 		}
 
-		// шлем логин
+		// ГёГ«ГҐГ¬ Г«Г®ГЈГЁГ­
 		Log.i(TAG, "Send login");
 		sendAndCodeToBase64(mLogin.getBytes(), Base64.CRLF);
 		message = receive();
 		if (checkResponse(message) != LOGIN_SUCCESS) {
-			mLastError = "Некорректное имя пользователя\r\n" + message;
+			mLastError = "ГЌГҐГЄГ®Г°Г°ГҐГЄГІГ­Г®ГҐ ГЁГ¬Гї ГЇГ®Г«ГјГ§Г®ГўГ ГІГҐГ«Гї\r\n" + message;
 			disconnect();
 			return false;
 		}
 
-		// шлем пароль
+		// ГёГ«ГҐГ¬ ГЇГ Г°Г®Г«Гј
 		Log.i(TAG, "Send password");
 		sendAndCodeToBase64(mPassword.getBytes(), Base64.CRLF);
 		message = receive();
 		if (checkResponse(message) != PASSWORD_SUCCESS) {
-			mLastError = "Неверный пароль\r\n" + message;
+			mLastError = "ГЌГҐГўГҐГ°Г­Г»Г© ГЇГ Г°Г®Г«Гј\r\n" + message;
 			disconnect();
 			return false;
 		}
 
 		Log.i(TAG, "Authorization complete");
 
-		// От кого
+		// ГЋГІ ГЄГ®ГЈГ®
 		message = String.format("MAIL FROM: %s\r\n", mailData.From());
 		send(message);
 		message = receive();
@@ -221,7 +217,7 @@ public class SMTP {
 			return false;
 		}
 
-		// Кому
+		// ГЉГ®Г¬Гі
 		message = String.format("RCPT TO: %s\r\n", mailData.To());
 		send(message);
 		message = receive();
@@ -231,18 +227,18 @@ public class SMTP {
 			return false;
 		}
 
-		// Данные--------------------------------------------------------------------
+		// Г„Г Г­Г­Г»ГҐ--------------------------------------------------------------------
 		Log.i(TAG, "Send data");
 		send("DATA\r\n");
 		message = receive();
 
 		if (checkResponse(message) != DATA_SUCCESS) {
-			mLastError = "Ошибка отправки секции DATA\r\n" + message;
+			mLastError = "ГЋГёГЁГЎГЄГ  Г®ГІГЇГ°Г ГўГЄГЁ Г±ГҐГЄГ¶ГЁГЁ DATA\r\n" + message;
 			disconnect();
 			return false;
 		}
 
-		// Формируем заголовок
+		// Г”Г®Г°Г¬ГЁГ°ГіГҐГ¬ Г§Г ГЈГ®Г«Г®ГўГ®ГЄ
 		String tmp = codeAgent;
 
 		SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyHHmmss",
@@ -265,7 +261,7 @@ public class SMTP {
 		header.append(String.format("Subject: %s\r\n", mailData.Subject()));
 		header.append("MIME-Version: 1.0\r\n");
 
-		// Если вложений нет, отправляем
+		// Г…Г±Г«ГЁ ГўГ«Г®Г¦ГҐГ­ГЁГ© Г­ГҐГІ, Г®ГІГЇГ°Г ГўГ«ГїГҐГ¬
 		Log.i(TAG, "Send message");
 		if (mailData.getAttachments().size() == 0) {
 			header.append(String.format(
@@ -274,7 +270,7 @@ public class SMTP {
 
 			send(header.toString());
 			sendAndCodeToBase64(mailData.Body());
-		} else// вложения
+		} else// ГўГ«Г®Г¦ГҐГ­ГЁГї
 		{
 			// header = new StringBuilder();
 			header.append(String
@@ -306,7 +302,7 @@ public class SMTP {
 
 				send1251(header.toString());
 
-				// Далее - непосредственно файл
+				// Г„Г Г«ГҐГҐ - Г­ГҐГЇГ®Г±Г°ГҐГ¤Г±ГІГўГҐГ­Г­Г® ГґГ Г©Г«
 				File att = new File(item);
 
 				if (att.canRead()) {
@@ -324,21 +320,21 @@ public class SMTP {
 			send(String.format("--%s--\r\n", BOUND));
 		}
 
-		// Заканчиваем
+		// Г‡Г ГЄГ Г­Г·ГЁГўГ ГҐГ¬
 		send("\r\n.\r\n");
 		message = receive();
 		if (checkResponse(message) != GENERIC_SUCCESS) {
-			mLastError = "Ошибка отправки данных\r\n" + message;
+			mLastError = "ГЋГёГЁГЎГЄГ  Г®ГІГЇГ°Г ГўГЄГЁ Г¤Г Г­Г­Г»Гµ\r\n" + message;
 			disconnect();
 			return false;
 		}
 
-		// Завершаем сеанс
+		// Г‡Г ГўГҐГ°ГёГ ГҐГ¬ Г±ГҐГ Г­Г±
 		Log.i(TAG, "Quit");
 		send("QUIT\r\n");
 		message = receive();
 		if (checkResponse(message) != QUIT_SUCCESS) {
-			mLastError = "Ошибка при завершении сеанса\r\n" + message;
+			mLastError = "ГЋГёГЁГЎГЄГ  ГЇГ°ГЁ Г§Г ГўГҐГ°ГёГҐГ­ГЁГЁ Г±ГҐГ Г­Г±Г \r\n" + message;
 			disconnect();
 			return false;
 		}
