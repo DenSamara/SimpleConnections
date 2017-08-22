@@ -1,5 +1,3 @@
-package com.dalimo.mtrade.connectivity;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -38,7 +36,7 @@ public class FTP {
 	private boolean mIsConnected;
 
 	/*
-	 * TODO: Конструктор
+	 * TODO: ГЉГ®Г­Г±ГІГ°ГіГЄГІГ®Г°
 	 */
 	public FTP(String server, String login, String passw) {
 		mServer = server;
@@ -49,7 +47,7 @@ public class FTP {
 	}
 
 	/**
-	 * TODO: Конструктор со значениями по-умолчанию
+	 * TODO: ГЉГ®Г­Г±ГІГ°ГіГЄГІГ®Г° Г±Г® Г§Г­Г Г·ГҐГ­ГЁГїГ¬ГЁ ГЇГ®-ГіГ¬Г®Г«Г·Г Г­ГЁГѕ
 	 */
 	public FTP() {
 		this("ftp.microsoft.com", "anonymous", "ftp.microsoft.com");
@@ -93,7 +91,7 @@ public class FTP {
 	public boolean connect(String server, String login, String password,
 			byte port) {
 		if (server.length() == 0) {
-			Log.e(TAG, "Имя сервера не может быть пустым");
+			Log.e(TAG, "Г€Г¬Гї Г±ГҐГ°ГўГҐГ°Г  Г­ГҐ Г¬Г®Г¦ГҐГІ ГЎГ»ГІГј ГЇГіГ±ГІГ»Г¬");
 			return false;
 		}
 
@@ -142,12 +140,12 @@ public class FTP {
 	// TODO: login
 	public boolean login(String login, String password) {
 		if (login.length() == 0) {
-			Log.e(TAG, "Имя пользователя не может быть пустым");
+			Log.e(TAG, "Г€Г¬Гї ГЇГ®Г«ГјГ§Г®ГўГ ГІГҐГ«Гї Г­ГҐ Г¬Г®Г¦ГҐГІ ГЎГ»ГІГј ГЇГіГ±ГІГ»Г¬");
 			return false;
 		}
 
 		if (!mIsConnected) {
-			Log.e(TAG, "Сначала нужно выполнить подключение");
+			Log.e(TAG, "Г‘Г­Г Г·Г Г«Г  Г­ГіГ¦Г­Г® ГўГ»ГЇГ®Г«Г­ГЁГІГј ГЇГ®Г¤ГЄГ«ГѕГ·ГҐГ­ГЁГҐ");
 			return false;
 		}
 
@@ -299,7 +297,7 @@ public class FTP {
 		Log.i(TAG, "Transfer starting");
 
 		if (unswer.contains("550")) {
-			Log.e(TAG, "Файл не существует/r/n" + unswer);
+			Log.e(TAG, "Г”Г Г©Г« Г­ГҐ Г±ГіГ№ГҐГ±ГІГўГіГҐГІ/r/n" + unswer);
 			closeDataConnection();
 			return false;
 		}
@@ -366,9 +364,9 @@ public class FTP {
 	}
 
 	/**
-	 * Возвращает признак подключения
+	 * Г‚Г®Г§ГўГ°Г Г№Г ГҐГІ ГЇГ°ГЁГ§Г­Г ГЄ ГЇГ®Г¤ГЄГ«ГѕГ·ГҐГ­ГЁГї
 	 * 
-	 * @return true если подключен, false - иначе
+	 * @return true ГҐГ±Г«ГЁ ГЇГ®Г¤ГЄГ«ГѕГ·ГҐГ­, false - ГЁГ­Г Г·ГҐ
 	 */
 	public boolean isConnected() {
 		return mIsConnected;
